@@ -1,2 +1,11 @@
 ---
 # vars file for ec2
+keypair: build-deploy
+instance_type: t3.small
+build_instance_name: test-build
+deploy_instance_name: test-deploy
+image: ami-0fa91bc90632c73c9
+wait: yes
+group: build-deploy
+region: eu-north-1
+security_group: BuildDeploy
