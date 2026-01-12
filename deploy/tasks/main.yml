@@ -1,0 +1,21 @@
+---
+# tasks file for deploy
+- name: Create a new directory
+  ansible.builtin.file:
+    path: "{{ project_dir }}"
+    state: directory
+    
+- name: Pull the project's docker image
+  ansible.builtin.command:
+    cmd: "docker pull {{ docker_image_name }}:{{ docker_image_tag }}"
+    chdir: "{{ project_dir }}"
+
+- name: Copy docker-compose.yaml to {{ project_dir }}
+  ansible.builtin.copy:
+    src: docker-compose.yaml
+    dest: "{{ project_dir }}"
+
+- name: Deploy project in docker
+  ansible.builtin.command:
+    cmd: "docker-compose up -d"
+    chdir: "{{ project_dir }}"

@@ -1,0 +1,14 @@
+---
+- name: Build project with Maven
+  hosts: build
+
+  roles:
+    - common
+    - build
+
+- name: Deploy project with Tomcat
+  hosts: deploy
+
+  roles:
+    - common
+    - deploy

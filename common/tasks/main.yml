@@ -1,0 +1,16 @@
+---
+# tasks file for common
+- name: Ensure docker-compose & docker package is present
+  ansible.builtin.package:
+    name:
+    - docker-compose
+    - docker-ce
+    state: present
+  become: yes
+
+- name: Ensure docker service is started
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+  become: yes
