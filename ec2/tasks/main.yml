@@ -1,32 +1,79 @@
 ---
 # tasks file for ec2
-- name: Ensure creating security group for the instance
-  ec2_group:
-    name: "{{ security_group }}"
-    description: Test build/deploy group
-    region: "{{ region }}"
+- name: Ensure {{ keypair_name }} keypair is created
+  amazon.aws.ec2_key:
+    name: "{{ keypair_name }}"
+    key_type: ed25519
+  no_log: true
+  register: ec2_key_result
+
+- name: Ensure private key of {{ keypair_name }} keypair saved on localhost
+  ansible.builtin.copy:
+    content: "{{ ec2_key_result.key.private_key }}"
+    dest: "~/.ssh/{{ keypair_name }}"
+    mode: 0600
+  when: ec2_key_result.changed
+
+- name: Ensure {{ tomcat_sg }} security group is created
+  amazon.aws.ec2_security_group:
+    name: "{{ tomcat_sg }}"
+    description: Allow Tomcat ports
+    vpc_id: "{{ vpc_name }}"
+    region: "{{ region_name }}"
     rules:
       - proto: tcp
-        from_port: 22
-        to_port: 22
+        ports:
+          - 8080
+          - 8443
         cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 80
-        to_port: 80
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 8080
-        to_port: 8080
-        cidr_ip: 0.0.0.0/0
-  rules_egress:
-    - proto: all
-      cidr_ip: 0.0.0.0/0
-- name: Ensure creating of EC2 VM
-  ec2_instance:
-    security_group: "{{ security_group }}"
-    name: "{{ instance_name }}"
-    key_name: "{{ keypair }}"
-    instance_type: "{{ instance_type}}"
-    image_id: "{{ image }}"
-    region: "{{ region }}"
-    wait_timeout: 3
+        rule_desc: Allow all on ports 8080 and 8443
+
+- name: Ensure {{ build_instance_name }} instance is created
+  amazon.aws.ec2_instance:
+    name: "{{ build_instance_name }}"
+    key_name: "{{ keypair_name }}"
+    instance_type: "{{ instance_type_name }}"
+    image_id: "{{ image_id }}"
+    region: "{{ region_name }}"
+    security_groups: "{{ default_sg }}"
+    vpc_subnet_id: "{{ vpc_subnet }}"
+    wait: yes
+    tags:
+      Environment: Testing
+  register: build_instance_info
+
+- name: Print {{ build_instance_name }} Public IP address
+  ansible.builtin.debug:
+    var: "{{ build_instance_info.instances[0].public_ip_address }}"
+
+- name: Ensure {{ build_instance_name }} IP is added in-memory inventory
+  ansible.builtin.add_host:
+    name: "{{ build_instance_info.instances[0].public_ip_address }}"
+    groups:
+      - "{{ build_inventory_name }}"
+
+- name: Ensure {{ deploy_instance_name }} instance is created
+  amazon.aws.ec2_instance:
+    name: "{{ deploy_instance_name }}"
+    key_name: "{{ keypair_name }}"
+    instance_type: "{{ instance_type_name }}"
+    image_id: "{{ image_id }}"
+    region: "{{ region_name }}"
+    security_groups:
+      - "{{ default_sg }}"
+      - "{{ tomcat_sg }}"
+    vpc_subnet_id: "{{ vpc_subnet }}"
+    wait: yes
+    tags:
+      Environment: Testing
+  register: deploy_instance_info
+
+- name: Print Public {{ deploy_server_name }} IP address
+  debug:
+    var: "{{ deploy_instance_info.instances[0].public_ip_address }}"
+
+- name: Ensure {{ deploy_instance_name }} IP is added in-memory inventory
+  add_host:
+    name: "{{ deploy_instance_info.instances[0].public_ip_address }}"
+    groups:
+      - "{{ deploy_inventory_name }}"
