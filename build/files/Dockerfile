@@ -1,7 +1,8 @@
 FROM maven:3.6.3-openjdk-11 AS build
 
 WORKDIR /build
-RUN git clone https://github.com/venkaDaria/puzzle15.git /build
+COPY . .
+RUN rm -rf target/*.war
 RUN mvn package war:war
 RUN mv target/*.war /tmp/puzzle15.war
 
