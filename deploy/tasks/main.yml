@@ -9,6 +9,7 @@
   ansible.builtin.command:
     cmd: "docker pull {{ docker_image_name }}:{{ docker_image_tag }}"
     chdir: "{{ project_dir }}"
+  become: yes
 
 - name: Copy docker-compose.yaml to {{ project_dir }}
   ansible.builtin.copy:
@@ -17,5 +18,6 @@
 
 - name: Deploy project in docker
   ansible.builtin.command:
-    cmd: "docker-compose up -d"
+    cmd: "docker compose up -d"
     chdir: "{{ project_dir }}"
+  become: yes
