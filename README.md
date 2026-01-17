@@ -1,11 +1,11 @@
-Test role for build and deploy [boxfuse](https://github.com/boxfuse/boxfuse-sample-java-war-hello) app.
+Test role for build and deploy [puzzle15](https://github.com/venkaDaria/puzzle15) app.
 
 ### How to start?
 
 Command:
 
 ```bash
-ansible-playbook docker_login.yml -e '{"docker_login":"<login>", "docker_passwd":"<password>"}'
+ansible-playbook docker_login.yml -e '{"docker_login":"<login>", "docker_passwd":"<password>"}' --private-key ~/.ssh/ansible-test
 ```
 where:
 
