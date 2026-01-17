@@ -1,5 +1,5 @@
 ---
 # defaults file for boxfuse
 project_dir: /tmp/project
-docker_image_name: nihi1ist/boxfuse
+docker_image_name: nihi1ist/puzzle15
 docker_image_tag: 1.0-alpine
