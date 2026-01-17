@@ -49,7 +49,7 @@
 
 - name: Ensure {{ build_instance_name }} IP is added in ~/.ssh/known_hosts
   ansible.builtin.command:
-    cmd: "ssh-keyscan -t ed25519 {{ build_instance_info.instances[0].public_ip_address }} ~/.ssh/known_hosts"
+    cmd: "ssh-keyscan -t ed25519 {{ build_instance_info.instances[0].public_ip_address }} >> ~/.ssh/known_hosts"
 
 - name: Ensure {{ build_instance_name }} IP is added in-memory inventory
   ansible.builtin.add_host:
@@ -80,7 +80,7 @@
 
 - name: Ensure {{ deploy_instance_name }} IP is added in ~/.ssh/known_hosts
   ansible.builtin.command:
-    cmd: "ssh-keyscan -t ed25519 {{ deploy_instance_info.instances[0].public_ip_address }} ~/.ssh/known_hosts"
+    cmd: "ssh-keyscan -t ed25519 {{ deploy_instance_info.instances[0].public_ip_address }} >> ~/.ssh/known_hosts"
 
 - name: Ensure {{ deploy_instance_name }} IP is added in-memory inventory
   add_host:
