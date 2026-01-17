@@ -37,6 +37,7 @@
     region: "{{ region_name }}"
     security_groups: "{{ default_sg }}"
     vpc_subnet_id: "{{ vpc_subnet }}"
+    state: started
     wait: yes
     tags:
       Environment: "{{ environment_name }}"
@@ -44,7 +45,11 @@
 
 - name: Print {{ build_instance_name }} Public IP address
   ansible.builtin.debug:
-    var: "{{ build_instance_info.instances[0].public_ip_address }}"
+    var: build_instance_info.instances[0].public_ip_address
+
+- name: Ensure {{ build_instance_name }} IP is added in ~/.ssh/known_hosts
+  ansible.builtin.command:
+    cmd: "ssh-keyscan -t ed25519 {{ build_instance_info.instances[0].public_ip_address }} ~/.ssh/known_hosts"
 
 - name: Ensure {{ build_instance_name }} IP is added in-memory inventory
   ansible.builtin.add_host:
@@ -63,6 +68,7 @@
       - "{{ default_sg }}"
       - "{{ tomcat_sg }}"
     vpc_subnet_id: "{{ vpc_subnet }}"
+    state: started
     wait: yes
     tags:
       Environment: "{{ environment_name }}"
@@ -70,7 +76,11 @@
 
 - name: Print Public {{ deploy_server_name }} IP address
   debug:
-    var: "{{ deploy_instance_info.instances[0].public_ip_address }}"
+    var: deploy_instance_info.instances[0].public_ip_address
+
+- name: Ensure {{ deploy_instance_name }} IP is added in ~/.ssh/known_hosts
+  ansible.builtin.command:
+    cmd: "ssh-keyscan -t ed25519 {{ deploy_instance_info.instances[0].public_ip_address }} ~/.ssh/known_hosts"
 
 - name: Ensure {{ deploy_instance_name }} IP is added in-memory inventory
   add_host:
