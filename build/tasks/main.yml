@@ -10,10 +10,11 @@
   ansible.builtin.git:
     repo: 'https://github.com/venkaDaria/puzzle15.git'
     dest: "{{ project_dir }}"
+    force: true
 
 - name: Patch pom.xml
   ansible.builtin.blockinfile:
-    path: ~/.dev/devops/devops-school/13-lesson/puzzle15/pom.xml
+    path: "{{ project_dir }}/pom.xml"
     append_newline: true
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
     block: |
