@@ -9,6 +9,7 @@
 
 - name: Ensure project build with Maven
   hosts: build
+  user: ubuntu
 
   roles:
     - common
@@ -16,6 +17,7 @@
 
 - name: Ensure the project is published using Tomcat
   hosts: deploy
+  user: ubuntu
 
   roles:
     - common
