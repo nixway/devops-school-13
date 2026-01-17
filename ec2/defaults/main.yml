@@ -1,6 +1,6 @@
 ---
 # defaults file for ec2
-keypair_name: ansible_test
+keypair_name: ansible-test
 build_instance_name: test-build-server
 build_inventory_name: build
 deploy_instance_name: test-deploy-server
@@ -12,3 +12,4 @@ default_sg: only-ssh
 tomcat_sg: tomcat
 vpc_name: vpc-0d1dc56f66d409c33
 vpc_subnet: subnet-08db1ddd4e7254900
+environment_name: Testing

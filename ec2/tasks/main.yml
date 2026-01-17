@@ -39,7 +39,7 @@
     vpc_subnet_id: "{{ vpc_subnet }}"
     wait: yes
     tags:
-      Environment: Testing
+      Environment: "{{ environment_name }}"
   register: build_instance_info
 
 - name: Print {{ build_instance_name }} Public IP address
@@ -65,7 +65,7 @@
     vpc_subnet_id: "{{ vpc_subnet }}"
     wait: yes
     tags:
-      Environment: Testing
+      Environment: "{{ environment_name }}"
   register: deploy_instance_info
 
 - name: Print Public {{ deploy_server_name }} IP address

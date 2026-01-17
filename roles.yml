@@ -1,12 +1,20 @@
 ---
-- name: Build project with Maven
+- name: Ensure instances are created on AWS EC2
+  hosts: localhost
+  connection: local
+  user: nihi1ist
+
+  roles:
+    - ec2
+
+- name: Ensure project build with Maven
   hosts: build
 
   roles:
     - common
     - build
 
-- name: Deploy project with Tomcat
+- name: Ensure the project is published using Tomcat
   hosts: deploy
 
   roles:
