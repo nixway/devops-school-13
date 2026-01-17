@@ -13,7 +13,28 @@
 
 - name: Patch pom.xml
   ansible.builtin.blockinfile:
+    path: ~/.dev/devops/devops-school/13-lesson/puzzle15/pom.xml
+    append_newline: true
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    block: |
+      {% filter indent(width=4, first=true) %}
+      <properties>
+          <maven.compiler.source>1.8</maven.compiler.source>
+          <maven.compiler.target>1.8</maven.compiler.target>
+      </properties>
 
+      <build>
+          <pluginManagement>
+              <plugins>
+                  <plugin>
+                      <artifactId>maven-war-plugin</artifactId>
+                      <version>3.3.2</version>
+                  </plugin>
+              </plugins>
+          </pluginManagement>
+      </build>
+      {% endfilter %}
+    insertbefore: "<dependencies>"
 
 - name: Copy Dockerfile to {{ project_dir }}
   ansible.builtin.copy:
