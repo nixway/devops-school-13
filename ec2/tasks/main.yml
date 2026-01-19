@@ -14,6 +14,10 @@
     mode: 0600
   when: ec2_key_result.changed
 
+- name: Ensure {{ keypair_name }} key is added to ssh-agent
+  ansible.builtin.command:
+    cmd: "ssh-add ~/.ssh/{{ keypair_name }}"
+
 - name: Ensure {{ tomcat_sg }} security group is created
   amazon.aws.ec2_security_group:
     name: "{{ tomcat_sg }}"
