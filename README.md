@@ -5,7 +5,7 @@ Test role for build and deploy [puzzle15](https://github.com/venkaDaria/puzzle15
 Command:
 
 ```bash
-ansible-playbook roles.yml -e '{"docker_login":"<login>", "docker_passwd":"<password>"}' --private-key ~/.ssh/ansible-test
+ansible-playbook roles.yml -e '{"docker_login":"<login>", "docker_passwd":"<password>"}'
 ```
 where:
 
